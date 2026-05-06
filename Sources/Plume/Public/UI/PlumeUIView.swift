@@ -71,7 +71,7 @@ public final class PlumeUIView: UIView {
 
         // TODO: Add support for birthRate (of CAEmitterCell) property.
         cacell.birthRate = 1
-        
+
         // TODO: Add support for scaleSpeed property.
         cacell.scaleSpeed = .zero
         
