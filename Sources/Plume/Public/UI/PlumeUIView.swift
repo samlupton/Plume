@@ -68,7 +68,7 @@ public final class PlumeUIView: UIView {
         cacell.lifetimeRange = Float(cell.lifetime.range)
         cacell.spin = cell.spin.base
         cacell.spinRange = cell.spin.range
-        
+
         // TODO: Add support for birthRate (of CAEmitterCell) property.
         cacell.birthRate = 1
         
