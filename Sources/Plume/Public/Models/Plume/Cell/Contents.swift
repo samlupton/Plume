@@ -1,5 +1,5 @@
 //
-//  Content.swift
+//  Contents.swift
 //  Plume
 //
 //  Created by Samuel Lupton on 4/19/26.
@@ -9,7 +9,7 @@ import UIKit
 
 extension Plume.Cell {
     /// Encapsulates the image used to render a particle.
-    internal struct Contents: Sendable {
+    internal struct Contents: Sendable, Decodable {
         /// The backing Core Graphics image used by the emitter cell.
         let image: CGImage?
         
@@ -33,6 +33,17 @@ extension Plume.Cell {
         /// - Parameter resource: The image resource used to render the particle.
         internal init(resource: ImageResource) {
             self.image = UIImage(resource: resource).cgImage
+        }
+        
+        @available(iOS 15.0, *)
+        /// Creates particle contents by downloading an image from a remote URL.
+        ///
+        /// - Parameter url: The remote image location.
+        /// - Throws: An error if the image data cannot be fetched.
+        internal init(url: URL) async throws {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            let uiimage = UIImage(data: data)
+            self.image = uiimage?.cgImage
         }
     }
 }

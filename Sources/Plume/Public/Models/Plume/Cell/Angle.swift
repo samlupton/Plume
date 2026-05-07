@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines the emission direction and spread for a particle.
-    public struct Angle: Sendable {
+    public struct Angle: Sendable, Decodable {
         /// The base emission angle in radians.
         let base: CGFloat
 

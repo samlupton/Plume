@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines the horizontal and vertical acceleration applied to a particle over time.
-    public struct Acceleration: Sendable {
+    public struct Acceleration: Sendable, Decodable {
         /// Horizontal acceleration.
         let x: CGFloat
 

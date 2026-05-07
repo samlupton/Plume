@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines the initial speed of a particle and its speed variance.
-    public struct Velocity: Sendable {
+    public struct Velocity: Sendable, Decodable {
         /// The base velocity applied at emission time.
         let base: CGFloat
 

@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines the particle size and size variance.
-    public struct Scale: Sendable {
+    public struct Scale: Sendable, Decodable {
         /// The base rendered scale of the particle.
         let base: CGFloat
 

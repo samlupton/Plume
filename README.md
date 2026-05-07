@@ -184,7 +184,7 @@ final class CelebrationViewController: UIViewController {
 
 The package includes a few helpers to make common effects easier to express:
 
-- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, or `ImageResource` into `[Plume.Cell]`
+- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, `ImageResource`, or remote `URL` values into `[Plume.Cell]`
 - `Plume.Emitter` presets such as `.point(birthRate:)`, `.line(birthRate:)`, `.circle(birthRate:)`, and `.rectangle(birthRate:)`
 - `Plume.Cell.Acceleration` presets such as `.zero`, `.gravity`, `.gravityLight`, `.lift`, `.upLeft`, and `.downRight`
 - `Plume.Cell.Angle` presets such as `.up`, `.down`, `.topHemisphere`, and `.radial`
@@ -192,6 +192,78 @@ The package includes a few helpers to make common effects easier to express:
 - `Plume.Cell.Scale` presets such as `.tiny`, `.small`, `.normal`, `.large`, and `.massive`
 - `Plume.Cell.Spin` presets such as `.none`, `.gentle`, `.normal`, `.lively`, and `.chaotic`
 - `Plume.Cell.Velocity` presets such as `.zero`, `.gentle`, `.standard`, `.lively`, and `.explosive`
+
+## Decoding Cell Configuration
+
+`Plume.Cell` and its scalar configuration types now conform to `Decodable`, which makes it practical to load particle behavior from JSON or other serialized payloads.
+
+The following types can be decoded directly:
+
+- `Plume.Cell`
+- `Plume.Cell.Acceleration`
+- `Plume.Cell.Angle`
+- `Plume.Cell.Lifetime`
+- `Plume.Cell.Scale`
+- `Plume.Cell.Spin`
+- `Plume.Cell.Velocity`
+
+This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files, remote configuration, or A/B test payloads.
+
+Example JSON:
+
+```json
+{
+  "contents": {},
+  "lifetime": { "base": 4, "range": 1 },
+  "spin": { "base": 1.5, "range": 0.5 },
+  "scale": { "base": 0.2, "range": 0.08 },
+  "acceleration": { "x": 0, "y": 120 },
+  "velocity": { "base": 180, "range": 60 },
+  "angle": { "base": -1.57, "range": 0.8 }
+}
+```
+
+Decoded scalar values map closely to Core Animation concepts:
+
+- `Acceleration` decodes `x` and `y`
+- `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` decode `base` and `range`
+- `Cell` combines those decoded values into a complete particle definition
+
+`contents` is part of the decoded `Plume.Cell` shape so the payload can match the full model, but image loading should still be treated as a separate concern. In practice, decode the motion values and supply image-backed cells through one of the image factory APIs described below when you are preparing a renderable plume.
+
+## Remote Image Loading
+
+`Array.make(from:urls:lifetime:spin:scale:acceleration:velocity:angle:)` adds an async throwing factory for building particle cells from remote images.
+
+Use it when the particle artwork is not known at compile time:
+
+```swift
+import Plume
+
+let imageURLs = [
+    URL(string: "https://example.com/confetti/star.png")!,
+    URL(string: "https://example.com/confetti/circle.png")!
+]
+
+let cells = try await [Plume.Cell].make(
+    from: imageURLs,
+    lifetime: .normal,
+    spin: .normal,
+    scale: .small,
+    acceleration: .gravity,
+    velocity: .standard,
+    angle: .radial
+)
+```
+
+Behavior notes:
+
+- The factory downloads all images concurrently.
+- Each successfully decoded image becomes one `Plume.Cell`.
+- The method throws if any download task fails.
+- The API is marked `@available(iOS 17.0, *)`.
+
+Use the existing `UIImage`, `CGImage`, or `ImageResource` overloads when your particle assets are already local.
 
 ## Public Typealiases
 
@@ -221,3 +293,4 @@ typealias CellVelocity = Plume.Cell.Velocity
 - `PlumeUIView` is non-interactive by default and is intended to sit on top of other content.
 - `Plume.Emitter.Mode` and `Plume.Emitter.Shape` are implementation details; the public entry point is the emitter factory API.
 - Most motion/value types are currently intended to be used through their preset constants rather than direct initialization.
+- Remote URL-backed cell creation is asynchronous and currently available on iOS 17 and later.

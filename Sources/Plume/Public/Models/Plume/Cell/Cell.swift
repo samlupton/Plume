@@ -7,7 +7,7 @@
 
 extension Plume {
     /// Describes a single particle style within a plume.
-    public struct Cell: Sendable {
+    public struct Cell: Sendable, Decodable {
         /// The visual contents used for the particle.
         let contents: Plume.Cell.Contents
 

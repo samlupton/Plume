@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines how long a particle remains alive, including optional variance.
-    public struct Lifetime: Sendable {
+    public struct Lifetime: Sendable, Decodable {
         /// The base lifetime in seconds.
         let base: CGFloat
 

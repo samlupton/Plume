@@ -9,7 +9,7 @@ import CoreGraphics
 
 extension Plume.Cell {
     /// Defines the rotational speed and rotational variance of a particle.
-    public struct Spin: Sendable {
+    public struct Spin: Sendable, Decodable {
         /// The base spin value applied to the particle.
         let base: CGFloat
 

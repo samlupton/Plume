@@ -120,4 +120,61 @@ extension Array where Element == Plume.Cell {
             )
         }
     }
+    
+    /// Creates an array of `Plume.Cell` from a collection of remote image URLs.
+    ///
+    /// The images are fetched concurrently, converted to `CGImage`, and then used
+    /// to construct particle cells that share the same behavioral configuration.
+    /// Use this when particle artwork is loaded at runtime rather than bundled
+    /// with the application.
+    ///
+    /// - Parameters:
+    ///   - urls: The remote image URLs used as the visual contents of each cell.
+    ///   - lifetime: The lifetime configuration applied to all cells.
+    ///   - spin: The rotational behavior applied to all cells.
+    ///   - scale: The size configuration applied to all cells.
+    ///   - acceleration: The acceleration applied to all cells.
+    ///   - velocity: The velocity applied to all cells.
+    ///   - angle: The emission angle applied to all cells.
+    /// - Returns: An array of configured `Plume.Cell` instances.
+    /// - Throws: An error if any image download fails.
+    @available(iOS 17.0, *)
+    public static func make(
+        from urls: [URL],
+        lifetime: Plume.Cell.Lifetime,
+        spin: Plume.Cell.Spin,
+        scale: Plume.Cell.Scale,
+        acceleration: Plume.Cell.Acceleration,
+        velocity: Plume.Cell.Velocity,
+        angle: Plume.Cell.Angle
+    ) async throws -> [Plume.Cell] {
+        try await withThrowingTaskGroup { group in
+            for url in urls {
+                group.addTask {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    return UIImage(data: data)?.cgImage
+                }
+            }
+            
+            var cgimages: [CGImage] = []
+            
+            for try await cgimage in group {
+                if let cgimage {
+                    cgimages.append(cgimage)
+                }
+            }
+            
+            return cgimages.map { cgimage in
+                Plume.Cell(
+                    contents: Plume.Cell.Contents(cgimage: cgimage),
+                    lifetime: lifetime,
+                    spin: spin,
+                    scale: scale,
+                    acceleration: acceleration,
+                    velocity: velocity,
+                    angle: angle
+                )
+            }
+        }
+    }
 }
