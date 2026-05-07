@@ -9,7 +9,7 @@ import UIKit
 
 extension Plume.Cell {
     /// Encapsulates the image used to render a particle.
-    internal struct Contents: Sendable, Decodable {
+    internal struct Contents: Sendable {
         /// The backing Core Graphics image used by the emitter cell.
         let image: CGImage?
         
@@ -41,9 +41,28 @@ extension Plume.Cell {
         /// - Parameter url: The remote image location.
         /// - Throws: An error if the image data cannot be fetched.
         internal init(url: URL) async throws {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, _) = try await URLSession.shared.data(from: url)
             let uiimage = UIImage(data: data)
             self.image = uiimage?.cgImage
+        }
+    }
+}
+
+// MARK: - Data Transfer Object
+
+extension Plume.Cell.Contents {
+    /// A decodable representation of particle content.
+    struct DataTransferObject: Decodable {
+        /// The remote image URL used to load the particle content.
+        let url: URL
+        
+        private enum CodingKeys: String, CodingKey {
+            case url
+        }
+        
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.url = try container.decode(URL.self, forKey: .url)
         }
     }
 }

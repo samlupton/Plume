@@ -12,7 +12,7 @@ extension Plume {
     ///
     /// Instances are typically created through the public emitter preset helpers
     /// rather than direct initialization.
-    public struct Emitter: Sendable {
+    public struct Emitter: Sendable, Decodable {
         /// The underlying emitter shape used by Core Animation.
         let shape: Plume.Emitter.Shape
 
