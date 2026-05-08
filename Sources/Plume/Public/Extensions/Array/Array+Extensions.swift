@@ -120,33 +120,20 @@ extension Array where Element == Plume.Cell {
         }
     }
     
-    /// Creates an array of `Plume.Cell` from a collection of remote image URLs.
+    /// Creates an array of `Plume.Cell` from a `Plume.DataTransferObject`.
     ///
-    /// Each image is loaded from its URL and converted into a particle cell
-    /// using the provided lifetime, spin, scale, acceleration, velocity,
-    /// and angle values.
+    /// Each remote image referenced by the data transfer object is loaded and
+    /// converted into a particle cell using the shared configuration stored in
+    /// the template cell.
     ///
-    /// - Parameters:
-    ///   - urls: The remote image URLs used as the visual contents of each cell.
-    ///   - lifetime: The lifetime configuration applied to all cells.
-    ///   - spin: The rotational behavior applied to all cells.
-    ///   - scale: The size configuration applied to all cells.
-    ///   - acceleration: The acceleration applied to all cells.
-    ///   - velocity: The velocity applied to all cells.
-    ///   - angle: The emission angle applied to all cells.
+    /// - Parameter dataTransferObject: The plume data transfer object used to build the cells.
     /// - Returns: An array of configured `Plume.Cell` instances.
     /// - Throws: An error if any image download fails.
     @available(iOS 17.0, *)
-    public static func make(
-        from urls: [URL],
-        lifetime: Plume.Cell.Lifetime,
-        spin: Plume.Cell.Spin,
-        scale: Plume.Cell.Scale,
-        acceleration: Plume.Cell.Acceleration,
-        velocity: Plume.Cell.Velocity,
-        angle: Plume.Cell.Angle
-    ) async throws -> [Plume.Cell] {
+    public static func make(with dataTransferObject: Plume.DataTransferObject) async throws -> [Plume.Cell] {
         try await withThrowingTaskGroup { group in
+            let urls = dataTransferObject.templateCell.contents.map{ $0.url }
+
             for url in urls {
                 group.addTask {
                     let (data, _) = try await URLSession.shared.data(from: url)
@@ -165,12 +152,12 @@ extension Array where Element == Plume.Cell {
             return cgimages.map { cgimage in
                 Plume.Cell(
                     contents: Plume.Cell.Contents(cgimage: cgimage),
-                    lifetime: lifetime,
-                    spin: spin,
-                    scale: scale,
-                    acceleration: acceleration,
-                    velocity: velocity,
-                    angle: angle
+                    lifetime: dataTransferObject.templateCell.lifetime,
+                    spin: dataTransferObject.templateCell.spin,
+                    scale: dataTransferObject.templateCell.scale,
+                    acceleration: dataTransferObject.templateCell.acceleration,
+                    velocity: dataTransferObject.templateCell.velocity,
+                    angle: dataTransferObject.templateCell.angle
                 )
             }
         }

@@ -7,7 +7,7 @@
 
 internal extension Plume.Emitter {
     /// Internal emitter modes used to map public presets onto `CAEmitterLayer`.
-    enum Mode: Sendable, Decodable {
+    enum Mode: Sendable {
         case points, outline, surface
     }
 }

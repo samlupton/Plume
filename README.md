@@ -193,49 +193,67 @@ The package includes a few helpers to make common effects easier to express:
 - `Plume.Cell.Spin` presets such as `.none`, `.gentle`, `.normal`, `.lively`, and `.chaotic`
 - `Plume.Cell.Velocity` presets such as `.zero`, `.gentle`, `.standard`, `.lively`, and `.explosive`
 
-## Decoding Cell Configuration
+## Serialization
 
-`Plume.Cell` and its scalar configuration types now conform to `Decodable`, which makes it practical to load particle behavior from JSON or other serialized payloads.
+`Plume` includes a lightweight DTO-based decoding layer for configuration-driven effects.
 
-The following types can be decoded directly:
+The current transport types are:
 
-- `Plume.Cell`
-- `Plume.Cell.Acceleration`
-- `Plume.Cell.Angle`
-- `Plume.Cell.Lifetime`
-- `Plume.Cell.Scale`
-- `Plume.Cell.Spin`
-- `Plume.Cell.Velocity`
+- `Plume.DataTransferObject`
+- `Plume.Cell.DataTransferObject`
+- `Plume.Cell.Contents.DataTransferObject`
 
-This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files, remote configuration, or A/B test payloads.
+This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files or remote configuration.
 
 Example JSON:
 
 ```json
 {
-  "contents": {},
-  "lifetime": { "base": 4, "range": 1 },
-  "spin": { "base": 1.5, "range": 0.5 },
-  "scale": { "base": 0.2, "range": 0.08 },
-  "acceleration": { "x": 0, "y": 120 },
-  "velocity": { "base": 180, "range": 60 },
-  "angle": { "base": -1.57, "range": 0.8 }
+  "emitter": {
+    "shape": "circle",
+    "mode": "surface",
+    "birthRate": 24
+  },
+  "templateCell": {
+    "contents": [
+      { "url": "https://example.com/confetti/star.png" },
+      { "url": "https://example.com/confetti/circle.png" }
+    ],
+    "lifetime": { "base": 2.5, "range": 0.8 },
+    "spin": { "base": 1.5, "range": 0.6 },
+    "scale": { "base": 1.0, "range": 0.2 },
+    "acceleration": { "x": 0, "y": 300 },
+    "velocity": { "base": 100, "range": 25 },
+    "angle": { "base": 0, "range": 1.57 }
+  }
 }
 ```
 
-Decoded scalar values map closely to Core Animation concepts:
+Decoded values map as follows:
 
-- `Acceleration` decodes `x` and `y`
-- `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` decode `base` and `range`
-- `Cell` combines those decoded values into a complete particle definition
-
-`contents` is part of the decoded `Plume.Cell` shape so the payload can match the full model, but image loading should still be treated as a separate concern. In practice, decode the motion values and supply image-backed cells through one of the image factory APIs described below when you are preparing a renderable plume.
+- `Plume.DataTransferObject` decodes one emitter and one template cell
+- `Plume.Cell.DataTransferObject` decodes an array of remote image URLs plus shared motion configuration
+- `Plume.Cell.Contents.DataTransferObject` decodes each remote image URL
+- `Plume.Emitter.Shape` and `Plume.Emitter.Mode` decode from string values such as `"circle"` and `"surface"`
 
 ## Remote Image Loading
 
-`Array.make(from:urls:lifetime:spin:scale:acceleration:velocity:angle:)` adds an async throwing factory for building particle cells from remote images.
+`Array.make(with:)` adds an async throwing factory for building particle cells from a decoded `Plume.DataTransferObject`.
 
-Use it when the particle artwork is not known at compile time:
+Use it when a serialized plume payload provides remote particle artwork and a shared template cell:
+
+```swift
+import Foundation
+import Plume
+
+let data = Data(json.utf8)
+let dto = try JSONDecoder().decode(PlumeDataTransferObject.self, from: data)
+let cells = try await [Plume.Cell].make(with: dto)
+```
+
+The package also includes `Array.make(from:urls:lifetime:spin:scale:acceleration:velocity:angle:)` for building particle cells directly from remote image URLs.
+
+Use the direct URL overload when the particle artwork is not known at compile time and you do not need the DTO layer:
 
 ```swift
 import Plume
@@ -258,6 +276,8 @@ let cells = try await [Plume.Cell].make(
 
 Behavior notes:
 
+- `make(with:)` downloads every remote image referenced by `templateCell.contents`.
+- Each successfully decoded image becomes one `Plume.Cell` using the shared template cell configuration.
 - The factory downloads all images concurrently.
 - Each successfully decoded image becomes one `Plume.Cell`.
 - The method throws if any download task fails.
@@ -279,6 +299,8 @@ typealias CellLifetime = Plume.Cell.Lifetime
 typealias CellScale = Plume.Cell.Scale
 typealias CellSpin = Plume.Cell.Spin
 typealias CellVelocity = Plume.Cell.Velocity
+typealias CellDataTransferObject = Plume.Cell.DataTransferObject
+typealias PlumeDataTransferObject = Plume.DataTransferObject
 ```
 
 ## Choosing an API

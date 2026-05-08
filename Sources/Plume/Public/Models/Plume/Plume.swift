@@ -23,16 +23,3 @@ public struct Plume {
         self.cells = cells
     }
 }
-
-// MARK: - Data Transfer Object
-
-extension Plume {
-    /// A decodable representation of a plume.
-    struct DataTransferObject: Decodable {
-        /// The emitter that defines how particles are spawned into the scene.
-        public var emitter: Plume.Emitter
-
-        /// The particle cells rendered by the emitter.
-        public var cells: [Plume.Cell.DataTransferObject]
-    }
-}

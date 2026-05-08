@@ -31,3 +31,10 @@ public typealias CellScale = Plume.Cell.Scale
 public typealias CellSpin = Plume.Cell.Spin
 /// Convenience alias for `Plume.Cell.Velocity`.
 public typealias CellVelocity = Plume.Cell.Velocity
+
+// MARK: - Data Transfer Objects
+
+/// Convenience alias for `Plume.Cell.DataTransferObject`.
+public typealias CellDataTransferObject = Plume.Cell.DataTransferObject
+/// Convenience alias for `Plume.DataTransferObject`.
+public typealias PlumeDataTransferObject = Plume.DataTransferObject
