@@ -185,7 +185,6 @@ final class CelebrationViewController: UIViewController {
 The package includes a few helpers to make common effects easier to express:
 
 - `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, or `ImageResource` values into `[Plume.Cell]`
-- `Array.make(with:)` for turning a decoded `PlumeDataTransferObject` into `[Plume.Cell]`
 - `Plume.Emitter` presets such as `.point(birthRate:)`, `.line(birthRate:)`, `.circle(birthRate:)`, and `.rectangle(birthRate:)`
 - `Plume.Cell.Acceleration` presets such as `.zero`, `.gravity`, `.gravityLight`, `.lift`, `.upLeft`, and `.downRight`
 - `Plume.Cell.Angle` presets such as `.up`, `.down`, `.topHemisphere`, and `.radial`
@@ -197,11 +196,6 @@ The package includes a few helpers to make common effects easier to express:
 ## Serialization
 
 `Plume` includes a lightweight DTO-based decoding layer for configuration-driven effects.
-
-The current transport types are:
-
-- `Plume.DataTransferObject`
-- `Plume.Cell.DataTransferObject`
 
 This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files or remote configuration.
 
@@ -237,24 +231,18 @@ Decoded values map as follows:
 - `Plume.Emitter.Shape` and `Plume.Emitter.Mode` decode from string values such as `"circle"` and `"surface"`
 - scalar types such as `Acceleration`, `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` also decode directly
 
-## Remote Image Loading
-
-`Array.make(with:)` adds an async throwing factory for building particle cells from a decoded `Plume.DataTransferObject`.
-
-Use it when a serialized plume payload provides remote particle artwork and a shared template cell:
+## Example Usage
 
 ```swift
 import Foundation
 import Plume
 
 let data = Data(json.utf8)
-let dto = try JSONDecoder().decode(PlumeDataTransferObject.self, from: data)
-let cells = try await [Plume.Cell].make(with: dto)
+let plume = try await Plume(from: data)
 ```
 
 Behavior notes:
 
-- `make(with:)` downloads every remote image referenced by `cell.contents`.
 - Each successfully decoded image becomes one `Plume.Cell` using the shared template cell configuration.
 - The factory downloads all images concurrently.
 - The method throws if any download task fails.
