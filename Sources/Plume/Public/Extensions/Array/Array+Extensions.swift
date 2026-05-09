@@ -132,7 +132,7 @@ extension Array where Element == Plume.Cell {
     @available(iOS 17.0, *)
     public static func make(with dataTransferObject: Plume.DataTransferObject) async throws -> [Plume.Cell] {
         try await withThrowingTaskGroup { group in
-            let urls = dataTransferObject.templateCell.contents.map{ $0.url }
+            let urls = dataTransferObject.cell.contents.map{ $0.url }
 
             for url in urls {
                 group.addTask {
@@ -152,12 +152,12 @@ extension Array where Element == Plume.Cell {
             return cgimages.map { cgimage in
                 Plume.Cell(
                     contents: Plume.Cell.Contents(cgimage: cgimage),
-                    lifetime: dataTransferObject.templateCell.lifetime,
-                    spin: dataTransferObject.templateCell.spin,
-                    scale: dataTransferObject.templateCell.scale,
-                    acceleration: dataTransferObject.templateCell.acceleration,
-                    velocity: dataTransferObject.templateCell.velocity,
-                    angle: dataTransferObject.templateCell.angle
+                    lifetime: dataTransferObject.cell.lifetime,
+                    spin: dataTransferObject.cell.spin,
+                    scale: dataTransferObject.cell.scale,
+                    acceleration: dataTransferObject.cell.acceleration,
+                    velocity: dataTransferObject.cell.velocity,
+                    angle: dataTransferObject.cell.angle
                 )
             }
         }
