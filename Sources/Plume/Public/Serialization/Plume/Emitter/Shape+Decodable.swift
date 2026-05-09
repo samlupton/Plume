@@ -11,10 +11,14 @@ extension Plume.Emitter.Shape: Decodable {
         let value = try container.decode(String.self)
 
         switch value {
-        case "point": self = .point
-        case "line": self = .line
-        case "rectangle": self = .rectangle
-        case "circle": self = .circle
+        case "point":
+            self = .point
+        case "line":
+            self = .line
+        case "rectangle":
+            self = .rectangle
+        case "circle":
+            self = .circle
         default:
             throw DecodingError.dataCorruptedError(
                 in: container,

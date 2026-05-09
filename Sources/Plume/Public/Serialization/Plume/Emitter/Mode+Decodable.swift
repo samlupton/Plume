@@ -11,9 +11,12 @@ extension Plume.Emitter.Mode: Decodable {
         let value = try container.decode(String.self)
 
         switch value {
-        case "points": self = .points
-        case "outline": self = .outline
-        case "surface": self = .surface
+        case "points":
+            self = .points
+        case "outline":
+            self = .outline
+        case "surface":
+            self = .surface
         default:
             throw DecodingError.dataCorruptedError(
                 in: container,
