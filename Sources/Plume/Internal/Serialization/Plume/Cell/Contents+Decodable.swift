@@ -11,7 +11,7 @@ import Foundation
 
 extension Plume.Cell.Contents {
     /// A decodable representation of particle content.
-    struct DataTransferObject: Decodable {
+    internal struct DataTransferObject: Decodable {
         /// The remote image URL used to load the particle content.
         let url: URL
         

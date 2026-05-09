@@ -22,4 +22,11 @@ public struct Plume {
         self.emitter = emitter
         self.cells = cells
     }
+    
+    @available(iOS 17.0, *)
+    public init(from data: Data) async throws {
+        let plume = try JSONDecoder().decode(Plume.DataTransferObject.self, from: data)
+        self.emitter = plume.emitter
+        self.cells = try await .make(with: plume.cell)
+    }
 }

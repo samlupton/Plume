@@ -6,7 +6,7 @@
 //
 
 extension Plume.Emitter.Mode: Decodable {
-    public init(from decoder: any Decoder) throws {
+    internal init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         let value = try container.decode(String.self)
 

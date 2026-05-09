@@ -130,9 +130,9 @@ extension Array where Element == Plume.Cell {
     /// - Returns: An array of configured `Plume.Cell` instances.
     /// - Throws: An error if any image download fails.
     @available(iOS 17.0, *)
-    public static func make(with dataTransferObject: Plume.DataTransferObject) async throws -> [Plume.Cell] {
+    internal static func make(with dataTransferObject: Plume.Cell.DataTransferObject) async throws -> [Plume.Cell] {
         try await withThrowingTaskGroup { group in
-            let urls = dataTransferObject.cell.contents.map{ $0.url }
+            let urls = dataTransferObject.contents.map{ $0.url }
 
             for url in urls {
                 group.addTask {
@@ -152,12 +152,12 @@ extension Array where Element == Plume.Cell {
             return cgimages.map { cgimage in
                 Plume.Cell(
                     contents: Plume.Cell.Contents(cgimage: cgimage),
-                    lifetime: dataTransferObject.cell.lifetime,
-                    spin: dataTransferObject.cell.spin,
-                    scale: dataTransferObject.cell.scale,
-                    acceleration: dataTransferObject.cell.acceleration,
-                    velocity: dataTransferObject.cell.velocity,
-                    angle: dataTransferObject.cell.angle
+                    lifetime: dataTransferObject.lifetime,
+                    spin: dataTransferObject.spin,
+                    scale: dataTransferObject.scale,
+                    acceleration: dataTransferObject.acceleration,
+                    velocity: dataTransferObject.velocity,
+                    angle: dataTransferObject.angle
                 )
             }
         }

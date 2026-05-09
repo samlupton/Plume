@@ -9,7 +9,7 @@
 
 extension Plume.Cell {
     /// A decodable representation of a particle cell.
-    public struct DataTransferObject: Decodable {
+    internal struct DataTransferObject: Decodable {
         /// The visual contents used for the particle.
         let contents: [Plume.Cell.Contents.DataTransferObject]
 
