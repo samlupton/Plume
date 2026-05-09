@@ -74,7 +74,7 @@ final class SerializationTests: XCTestCase {
         XCTAssertEqual(dto.angle.range, .pi, accuracy: 0.0001)
     }
 
-    func testPlumeDataTransferObjectDecodesEmitterAndTemplateCell() throws {
+    func testPlumeDataTransferObjectDecodesEmitterAndCell() throws {
         let dto: Plume.DataTransferObject = try decode("""
         {
           "emitter": {
@@ -82,7 +82,7 @@ final class SerializationTests: XCTestCase {
             "mode": "surface",
             "birthRate": 24
           },
-          "templateCell": {
+          "cell": {
             "contents": [
               {
                 "url": "https://example.com/circle.png"
@@ -122,10 +122,10 @@ final class SerializationTests: XCTestCase {
         XCTAssertEqual(dto.emitter.shape, .circle)
         XCTAssertEqual(dto.emitter.mode, .surface)
         XCTAssertEqual(dto.emitter.birthRate, 24, accuracy: 0.0001)
-        XCTAssertEqual(dto.templateCell.contents.count, 2)
-        XCTAssertEqual(dto.templateCell.contents[0].url, URL(string: "https://example.com/circle.png"))
-        XCTAssertEqual(dto.templateCell.contents[1].url, URL(string: "https://example.com/star.png"))
-        XCTAssertEqual(dto.templateCell.angle.range, .pi / 2, accuracy: 0.0001)
+        XCTAssertEqual(dto.cell.contents.count, 2)
+        XCTAssertEqual(dto.cell.contents[0].url, URL(string: "https://example.com/circle.png"))
+        XCTAssertEqual(dto.cell.contents[1].url, URL(string: "https://example.com/star.png"))
+        XCTAssertEqual(dto.cell.angle.range, .pi / 2, accuracy: 0.0001)
     }
 
     func testEmitterAndScalarModelsDecodeFromJSON() throws {
