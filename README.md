@@ -184,7 +184,7 @@ final class CelebrationViewController: UIViewController {
 
 The package includes a few helpers to make common effects easier to express:
 
-- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, or `ImageResource` into `[Plume.Cell]`
+- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, or `ImageResource` values into `[Plume.Cell]`
 - `Plume.Emitter` presets such as `.point(birthRate:)`, `.line(birthRate:)`, `.circle(birthRate:)`, and `.rectangle(birthRate:)`
 - `Plume.Cell.Acceleration` presets such as `.zero`, `.gravity`, `.gravityLight`, `.lift`, `.upLeft`, and `.downRight`
 - `Plume.Cell.Angle` presets such as `.up`, `.down`, `.topHemisphere`, and `.radial`
@@ -192,6 +192,63 @@ The package includes a few helpers to make common effects easier to express:
 - `Plume.Cell.Scale` presets such as `.tiny`, `.small`, `.normal`, `.large`, and `.massive`
 - `Plume.Cell.Spin` presets such as `.none`, `.gentle`, `.normal`, `.lively`, and `.chaotic`
 - `Plume.Cell.Velocity` presets such as `.zero`, `.gentle`, `.standard`, `.lively`, and `.explosive`
+
+## Serialization
+
+`Plume` includes a lightweight DTO-based decoding layer for configuration-driven effects.
+
+This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files or remote configuration.
+
+Example JSON:
+
+```json
+{
+  "emitter": {
+    "shape": "circle",
+    "mode": "surface",
+    "birthRate": 24
+  },
+  "cell": {
+    "contents": [
+      { "url": "https://example.com/confetti/star.png" },
+      { "url": "https://example.com/confetti/circle.png" }
+    ],
+    "lifetime": { "base": 2.5, "range": 0.8 },
+    "spin": { "base": 1.5, "range": 0.6 },
+    "scale": { "base": 1.0, "range": 0.2 },
+    "acceleration": { "x": 0, "y": 300 },
+    "velocity": { "base": 100, "range": 25 },
+    "angle": { "base": 0, "range": 1.57 }
+  }
+}
+```
+
+Decoded values map as follows:
+
+- `Plume.DataTransferObject` decodes one emitter and one template cell
+- `Plume.Cell.DataTransferObject` decodes an array of remote image URLs plus shared motion configuration
+- each `cell.contents` entry decodes one remote image URL
+- `Plume.Emitter.Shape` and `Plume.Emitter.Mode` decode from string values such as `"circle"` and `"surface"`
+- scalar types such as `Acceleration`, `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` also decode directly
+
+## Example Usage
+
+```swift
+import Foundation
+import Plume
+
+let data = Data(json.utf8)
+let plume = try await Plume(from: data)
+```
+
+Behavior notes:
+
+- Each successfully decoded image becomes one `Plume.Cell` using the shared template cell configuration.
+- The factory downloads all images concurrently.
+- The method throws if any download task fails.
+- The API is marked `@available(iOS 17.0, *)`.
+
+Use the existing `UIImage`, `CGImage`, or `ImageResource` overloads when your particle assets are already local.
 
 ## Public Typealiases
 
@@ -221,3 +278,4 @@ typealias CellVelocity = Plume.Cell.Velocity
 - `PlumeUIView` is non-interactive by default and is intended to sit on top of other content.
 - `Plume.Emitter.Mode` and `Plume.Emitter.Shape` are implementation details; the public entry point is the emitter factory API.
 - Most motion/value types are currently intended to be used through their preset constants rather than direct initialization.
+- Remote URL-backed cell creation is asynchronous and currently available on iOS 17 and later.

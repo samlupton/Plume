@@ -5,9 +5,9 @@
 //  Created by Samuel Lupton on 4/20/26.
 //
 
-internal extension Plume.Emitter {
+extension Plume.Emitter {
     /// Internal emitter shapes used to map public presets onto `CAEmitterLayer`.
-    enum Shape: Sendable {
+    internal enum Shape: Sendable {
         case point, line, rectangle, circle
     }
 }

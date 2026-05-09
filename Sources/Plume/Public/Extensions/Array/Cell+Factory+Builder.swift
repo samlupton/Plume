@@ -1,5 +1,5 @@
 //
-//  Array+Extensions.swift
+//  Cell+Factory+Builder.swift
 //  Plume
 //
 //  Created by Samuel Lupton on 4/26/26.
@@ -7,15 +7,12 @@
 
 import UIKit
 
-// MARK: - Plume Cell Array Factories
-
 /// Convenience factories for building arrays of `Plume.Cell` from image collections.
 extension Array where Element == Plume.Cell {
     /// Creates an array of `Plume.Cell` from a collection of `UIImage` values.
     ///
-    /// Each image is converted into a particle while sharing a common set of
-    /// behavioral properties such as lifetime, velocity, and spin. This provides
-    /// a concise way to generate multiple cells with consistent behavior.
+    /// Each image is converted into a particle cell using the provided
+    /// lifetime, spin, scale, acceleration, velocity, and angle values.
     ///
     /// - Parameters:
     ///   - uiimages: The images used as the visual contents of each cell.
@@ -50,8 +47,8 @@ extension Array where Element == Plume.Cell {
 
     /// Creates an array of `Plume.Cell` from a collection of `CGImage` values.
     ///
-    /// This behaves identically to the `UIImage` variant, but accepts lower-level
-    /// image types for greater flexibility or performance-sensitive scenarios.
+    /// Each image is converted into a particle cell using the provided
+    /// lifetime, spin, scale, acceleration, velocity, and angle values.
     ///
     /// - Parameters:
     ///   - cgimages: The images used as the visual contents of each cell.
@@ -86,8 +83,8 @@ extension Array where Element == Plume.Cell {
 
     /// Creates an array of `Plume.Cell` from a collection of `ImageResource` values.
     ///
-    /// This variant integrates with Swift’s resource system (iOS 17+),
-    /// allowing asset-based particle creation with the same shared behavior.
+    /// Each image resource is converted into a particle cell using the provided
+    /// lifetime, spin, scale, acceleration, velocity, and angle values.
     ///
     /// - Parameters:
     ///   - resources: The image resources used as the visual contents of each cell.

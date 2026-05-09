@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/25/26.
 //
 
-// MARK: - Static Presets
-
 /// Preset emission angles for common directional and radial effects.
 extension Plume.Cell.Angle {
 

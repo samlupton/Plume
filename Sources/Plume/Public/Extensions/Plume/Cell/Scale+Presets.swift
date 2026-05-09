@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/25/26.
 //
 
-// MARK: - Static Presets
-
 /// Preset scale values for small, standard, and oversized particle appearances.
 extension Plume.Cell.Scale {
 

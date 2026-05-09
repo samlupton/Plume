@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/25/26.
 //
 
-// MARK: - Static Presets
-
 /// Preset velocity values for ambient, standard, and explosive movement.
 extension Plume.Cell.Velocity {
 

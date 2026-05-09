@@ -74,7 +74,7 @@ public final class PlumeUIView: UIView {
 
         // TODO: Add support for scaleSpeed property.
         cacell.scaleSpeed = .zero
-        
+
         // TODO: Add support for contentsScale property.
         cacell.contentsScale = 1
         

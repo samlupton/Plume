@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/25/26.
 //
 
-// MARK: - Static Presets
-
 /// Preset lifetime values for short, extended, and ambient plume behaviors.
 extension Plume.Cell.Lifetime {
 

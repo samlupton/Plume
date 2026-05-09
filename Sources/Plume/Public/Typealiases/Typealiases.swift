@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/21/26.
 //
 
-// MARK: - Public Typealiases
-
 // MARK: - Cell
 
 /// Convenience alias for `Plume.Cell`.

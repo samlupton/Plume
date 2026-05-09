@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 4/19/26.
 //
 
-// MARK: - Static Presets
-
 /// Preset acceleration values for common plume motion styles.
 extension Plume.Cell.Acceleration {
 
