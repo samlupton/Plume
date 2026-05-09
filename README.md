@@ -276,8 +276,6 @@ typealias CellLifetime = Plume.Cell.Lifetime
 typealias CellScale = Plume.Cell.Scale
 typealias CellSpin = Plume.Cell.Spin
 typealias CellVelocity = Plume.Cell.Velocity
-typealias CellDataTransferObject = Plume.Cell.DataTransferObject
-typealias PlumeDataTransferObject = Plume.DataTransferObject
 ```
 
 ## Choosing an API
