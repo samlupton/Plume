@@ -39,12 +39,6 @@ The package has three main pieces:
 - `PlumeView` and `PlumeUIView`, the SwiftUI and UIKit renderers
 - a set of convenience extensions for quickly building emitters, cells, and preset motion values
 
-The source tree is organized into:
-
-- `Sources/Plume/Public/Core` for the public particle system API
-- `Sources/Plume/Public/Serialization` for DTO-based decoding support
-- `Sources/Plume/Internal/Core` for internal emitter implementation details
-
 ## Type Tree
 
 The public API is organized around `Plume` as the root type. Its purpose is to show the main model pieces you compose when building an effect.
