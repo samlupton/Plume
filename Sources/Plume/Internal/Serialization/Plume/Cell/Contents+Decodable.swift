@@ -19,7 +19,7 @@ extension Plume.Cell.Contents {
             case url
         }
         
-        public init(from decoder: any Decoder) throws {
+        internal init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.url = try container.decode(URL.self, forKey: .url)
         }
