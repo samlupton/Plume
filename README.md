@@ -220,7 +220,7 @@ Example JSON:
     "mode": "surface",
     "birthRate": 24
   },
-  "templateCell": {
+  "cell": {
     "contents": [
       { "url": "https://example.com/confetti/star.png" },
       { "url": "https://example.com/confetti/circle.png" }
@@ -239,7 +239,7 @@ Decoded values map as follows:
 
 - `Plume.DataTransferObject` decodes one emitter and one template cell
 - `Plume.Cell.DataTransferObject` decodes an array of remote image URLs plus shared motion configuration
-- each `templateCell.contents` entry decodes one remote image URL
+- each `cell.contents` entry decodes one remote image URL
 - `Plume.Emitter.Shape` and `Plume.Emitter.Mode` decode from string values such as `"circle"` and `"surface"`
 - scalar types such as `Acceleration`, `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` also decode directly
 
@@ -260,7 +260,7 @@ let cells = try await [Plume.Cell].make(with: dto)
 
 Behavior notes:
 
-- `make(with:)` downloads every remote image referenced by `templateCell.contents`.
+- `make(with:)` downloads every remote image referenced by `cell.contents`.
 - Each successfully decoded image becomes one `Plume.Cell` using the shared template cell configuration.
 - The factory downloads all images concurrently.
 - The method throws if any download task fails.
