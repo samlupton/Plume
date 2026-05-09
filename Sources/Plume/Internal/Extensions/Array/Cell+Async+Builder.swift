@@ -22,7 +22,7 @@ extension Array where Element == Plume.Cell {
     @available(iOS 17.0, *)
     internal static func make(with dataTransferObject: Plume.Cell.DataTransferObject) async throws -> [Plume.Cell] {
         try await withThrowingTaskGroup { group in
-            let urls = dataTransferObject.contents.map{ $0.url }
+            let urls = dataTransferObject.contents.map { $0.url }
             
             for url in urls {
                 group.addTask {
