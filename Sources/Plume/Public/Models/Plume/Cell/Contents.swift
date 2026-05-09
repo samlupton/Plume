@@ -26,20 +26,20 @@ extension Plume.Cell {
         internal init(uiimage: UIImage) {
             self.image = uiimage.cgImage
         }
-    
-        @available(iOS 17.0, *)
+
         /// Creates particle contents from an asset catalog image resource.
         ///
         /// - Parameter resource: The image resource used to render the particle.
+        @available(iOS 17.0, *)
         internal init(resource: ImageResource) {
             self.image = UIImage(resource: resource).cgImage
         }
-        
-        @available(iOS 15.0, *)
+
         /// Creates particle contents by downloading an image from a remote URL.
         ///
         /// - Parameter url: The remote image location.
         /// - Throws: An error if the image data cannot be fetched.
+        @available(iOS 15.0, *)
         internal init(url: URL) async throws {
             let (data, _) = try await URLSession.shared.data(from: url)
             let uiimage = UIImage(data: data)

@@ -25,6 +25,12 @@ public struct Plume {
         self.cells = cells
     }
     
+    /// Creates a `Plume` from raw JSON data.
+    ///
+    /// This initializer decodes a `Plume.DataTransferObject` from JSON and then
+    /// resolves all cell resources (such as remote images) asynchronously.
+    ///
+    /// - Parameter data: Raw JSON representation of a plume configuration.
     @available(iOS 17.0, *)
     public init(from data: Data) async throws {
         let plume = try JSONDecoder().decode(Plume.DataTransferObject.self, from: data)
