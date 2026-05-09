@@ -5,8 +5,6 @@
 //  Created by Samuel Lupton on 5/7/26.
 //
 
-// MARK: - Data Transfer Object
-
 extension Plume {
     /// A decodable representation of a plume.
     ///

@@ -7,8 +7,6 @@
 
 import Foundation
 
-// MARK: - Data Transfer Object
-
 extension Plume.Cell.Contents {
     /// A decodable representation of particle content.
     internal struct DataTransferObject: Decodable {
