@@ -39,6 +39,12 @@ The package has three main pieces:
 - `PlumeView` and `PlumeUIView`, the SwiftUI and UIKit renderers
 - a set of convenience extensions for quickly building emitters, cells, and preset motion values
 
+The source tree is organized into:
+
+- `Sources/Plume/Public/Core` for the public particle system API
+- `Sources/Plume/Public/Serialization` for DTO-based decoding support
+- `Sources/Plume/Internal/Core` for internal emitter implementation details
+
 ## Type Tree
 
 The public API is organized around `Plume` as the root type. Its purpose is to show the main model pieces you compose when building an effect.
@@ -184,7 +190,8 @@ final class CelebrationViewController: UIViewController {
 
 The package includes a few helpers to make common effects easier to express:
 
-- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, `ImageResource`, or remote `URL` values into `[Plume.Cell]`
+- `Array.make(from:)` for turning arrays of `UIImage`, `CGImage`, or `ImageResource` values into `[Plume.Cell]`
+- `Array.make(with:)` for turning a decoded `PlumeDataTransferObject` into `[Plume.Cell]`
 - `Plume.Emitter` presets such as `.point(birthRate:)`, `.line(birthRate:)`, `.circle(birthRate:)`, and `.rectangle(birthRate:)`
 - `Plume.Cell.Acceleration` presets such as `.zero`, `.gravity`, `.gravityLight`, `.lift`, `.upLeft`, and `.downRight`
 - `Plume.Cell.Angle` presets such as `.up`, `.down`, `.topHemisphere`, and `.radial`
@@ -201,7 +208,6 @@ The current transport types are:
 
 - `Plume.DataTransferObject`
 - `Plume.Cell.DataTransferObject`
-- `Plume.Cell.Contents.DataTransferObject`
 
 This is useful when your app wants to keep effect tuning outside of Swift source, for example in bundled JSON files or remote configuration.
 
@@ -233,8 +239,9 @@ Decoded values map as follows:
 
 - `Plume.DataTransferObject` decodes one emitter and one template cell
 - `Plume.Cell.DataTransferObject` decodes an array of remote image URLs plus shared motion configuration
-- `Plume.Cell.Contents.DataTransferObject` decodes each remote image URL
+- each `templateCell.contents` entry decodes one remote image URL
 - `Plume.Emitter.Shape` and `Plume.Emitter.Mode` decode from string values such as `"circle"` and `"surface"`
+- scalar types such as `Acceleration`, `Angle`, `Lifetime`, `Scale`, `Spin`, and `Velocity` also decode directly
 
 ## Remote Image Loading
 
@@ -251,35 +258,11 @@ let dto = try JSONDecoder().decode(PlumeDataTransferObject.self, from: data)
 let cells = try await [Plume.Cell].make(with: dto)
 ```
 
-The package also includes `Array.make(from:urls:lifetime:spin:scale:acceleration:velocity:angle:)` for building particle cells directly from remote image URLs.
-
-Use the direct URL overload when the particle artwork is not known at compile time and you do not need the DTO layer:
-
-```swift
-import Plume
-
-let imageURLs = [
-    URL(string: "https://example.com/confetti/star.png")!,
-    URL(string: "https://example.com/confetti/circle.png")!
-]
-
-let cells = try await [Plume.Cell].make(
-    from: imageURLs,
-    lifetime: .normal,
-    spin: .normal,
-    scale: .small,
-    acceleration: .gravity,
-    velocity: .standard,
-    angle: .radial
-)
-```
-
 Behavior notes:
 
 - `make(with:)` downloads every remote image referenced by `templateCell.contents`.
 - Each successfully decoded image becomes one `Plume.Cell` using the shared template cell configuration.
 - The factory downloads all images concurrently.
-- Each successfully decoded image becomes one `Plume.Cell`.
 - The method throws if any download task fails.
 - The API is marked `@available(iOS 17.0, *)`.
 
