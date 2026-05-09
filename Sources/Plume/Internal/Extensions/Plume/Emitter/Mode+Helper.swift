@@ -7,8 +7,6 @@
 
 import QuartzCore
 
-// MARK: - Helper Methods
-
 internal extension Plume.Emitter.Mode {
     /// Converts the internal plume emitter mode to the matching Core Animation mode.
     ///

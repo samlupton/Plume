@@ -7,8 +7,6 @@
 
 import CoreFoundation
 
-// MARK: - Static Presets
-
 /// Preset emitter constructors that expose the supported public plume emission styles.
 extension Plume.Emitter {
 

@@ -7,8 +7,6 @@
 
 import UIKit
 
-// MARK: - Plume Cell Array Factories
-
 extension Array where Element == Plume.Cell {
     /// Creates an array of `Plume.Cell` from a `Plume.DataTransferObject`.
     ///

@@ -7,8 +7,6 @@
 
 import QuartzCore
 
-// MARK: - Helper Methods
-
 internal extension Plume.Emitter.Shape {
     /// Converts the internal plume emitter shape to the matching Core Animation shape.
     ///
