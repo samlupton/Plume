@@ -15,13 +15,13 @@
   <img src="demo-videos/shower.gif" alt="Shower plume demo" width="32%" />
 </p>
 
-`Plume` is a Swift package for building particle effects with `CAEmitterLayer` and using them from SwiftUI or UIKit. The public API is centered around a single `Plume` value that combines an emitter and one or more particle cells.
+`Plume` is a Swift package for building particle effects with `CAEmitterLayer` and using them from SwiftUI. The public API is centered around a single `Plume` value that combines an emitter and one or more particle cells.
 
 ## Requirements
 
 - iOS 12+
 - Swift Package Manager
-- UIKit or SwiftUI
+- SwiftUI
 
 ## Installation
 
@@ -36,7 +36,7 @@ import Plume
 The package has three main pieces:
 
 - `Plume`, the top-level effect model
-- `PlumeView` and `PlumeUIView`, the SwiftUI and UIKit renderers
+- `PlumeView`, the SwiftUI renderer
 - a set of convenience extensions for quickly building emitters, cells, and preset motion values
 
 ## Type Tree
@@ -98,7 +98,7 @@ let plume = Plume(
 
 ## SwiftUI Usage
 
-Use `PlumeView` when the effect belongs inside a SwiftUI hierarchy. The view is trigger-based: when the `trigger` value changes, the underlying `PlumeUIView` emits again.
+Use `PlumeView` when the effect belongs inside a SwiftUI hierarchy. The view is trigger-based: when the `trigger` value changes, the underlying plume view emits again.
 
 ```swift
 import SwiftUI
@@ -138,47 +138,6 @@ struct CelebrationView: View {
 ```
 
 Use this approach when the plume effect should be attached to a specific screen or view tree.
-
-## UIKit Usage
-
-Use `PlumeUIView` when you want direct UIKit control. Create the view, size it to your container, add it to the hierarchy, and call `emit()`.
-
-```swift
-import UIKit
-import Plume
-
-final class CelebrationViewController: UIViewController {
-    private let plume = Plume(
-        emitter: .rectangle(birthRate: 20),
-        cells: .make(
-            from: [
-                UIImage(systemName: "sparkle")!,
-                UIImage(systemName: "circle.fill")!
-            ],
-            lifetime: .normal,
-            spin: .normal,
-            scale: .small,
-            acceleration: .gravity,
-            velocity: .standard,
-            angle: .bottomHemisphere
-        )
-    )
-
-    private lazy var plumeView = PlumeUIView(plume: plume)
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        plumeView.frame = view.bounds
-        plumeView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(plumeView)
-    }
-
-    func celebrate() {
-        plumeView.emit()
-    }
-}
-```
 
 ## Convenience Helpers
 
@@ -269,13 +228,12 @@ typealias CellVelocity = Plume.Cell.Velocity
 ## Choosing an API
 
 - Use `PlumeView` for SwiftUI screens.
-- Use `PlumeUIView` for UIKit screens and custom view hierarchies.
 - Use direct `Plume` construction when you want precise control over emitter behavior.
 
 ## Notes
 
 - `PlumeView` is trigger-driven and emits when the `trigger` input changes.
-- `PlumeUIView` is non-interactive by default and is intended to sit on top of other content.
+- The underlying UIKit view is internal, non-interactive by default, and intended to sit on top of other content.
 - `Plume.Emitter.Mode` and `Plume.Emitter.Shape` are implementation details; the public entry point is the emitter factory API.
 - Most motion/value types are currently intended to be used through their preset constants rather than direct initialization.
 - Remote URL-backed cell creation is asynchronous and currently available on iOS 17 and later.
