@@ -7,25 +7,24 @@
 
 import UIKit
 
-// TODO: Consider if this should be a public facing component.
 // TODO: Add support for haptics.
 // TODO: Add support for audio.
 
-/// A `UIView` responsible for rendering and emitting plume particles.
+/// An internal `UIView` responsible for rendering and emitting plume particles.
 ///
 /// `PlumeView` acts as a thin wrapper around `PlumeLayer`, handling
 /// its lifecycle and attaching it to the view’s backing layer. Upon
 /// initialization, it immediately begins emitting particles using the
 /// provided plume.
-public final class PlumeUIView: UIView {
+final class PlumeUIView: UIView {
     
     /// The plume definition rendered by this view.
     private let plume: Plume
     
-    /// Creates a UIKit plume view from a plume definition.
+    /// Creates a plume view from a plume definition.
     ///
     /// - Parameter plume: The plume rendered and emitted by the view.
-    public init(plume: Plume) {
+    init(plume: Plume) {
         self.plume = plume
         super.init(frame: .zero)
         
@@ -37,10 +36,10 @@ public final class PlumeUIView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Public Actions
+    // MARK: - Actions
 
     /// Emits the plume using the current view bounds as the emitter container.
-    public func emit() {
+    func emit() {
         let emitter = makeCAEmitter(with: plume)
         
         layer.addSublayer(emitter)
