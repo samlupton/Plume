@@ -14,7 +14,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+        run: |
+          XCODE_APP=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -n 1)
+          if [ -z "$XCODE_APP" ]; then
+            echo "No Xcode installation found"
+            exit 1
+          fi
+          echo "Selected $XCODE_APP"
+          sudo xcode-select -s "$XCODE_APP"
 
       - name: Resolve Swift Package
         run: swift package resolve
