@@ -61,17 +61,17 @@ struct ContentView: View {
 
 extension ContentView {
     static let images: [ImageResource] = [
-        ImageResource.ellipse109,
-        ImageResource.ellipse110,
-        ImageResource.ellipse111,
-        ImageResource.ellipse112,
-        ImageResource.ellipse113,
-        ImageResource.polygon6,
-        ImageResource.rectangle1238,
-        ImageResource.rectangle1239,
-        ImageResource.star1,
-        ImageResource.subtract,
-        ImageResource.vector
+        ImageResource.confettiGreenOval,
+        ImageResource.confettiLightBlueDot,
+        ImageResource.confettiSkyBlueCircle,
+        ImageResource.confettiMutedBlueDot,
+        ImageResource.confettiBlueDot,
+        ImageResource.confettiOrangeTriangle,
+        ImageResource.confettiRedTrapezoid,
+        ImageResource.confettiPurpleRectangle,
+        ImageResource.confettiYellowStar,
+        ImageResource.confettiPinkArc,
+        ImageResource.confettiBlueStreamer
     ]
 }
 
