@@ -43,7 +43,7 @@ final class PlumeUIView: UIView {
         let emitter = makeCAEmitter(with: plume)
         
         layer.addSublayer(emitter)
-        guard let animation = makeBirthRateAnimation() else { return }
+        guard let animation = animate() else { return }
         
         let id = UUID().uuidString
         emitter.add(animation, forKey: id)
@@ -77,6 +77,12 @@ final class PlumeUIView: UIView {
         // TODO: Add support for contentsScale property.
         cacell.contentsScale = 1
         
+        // Implements 3d rotations.
+        cacell.setValue("plane", forKey: "particleType")
+        cacell.setValue(Double.pi, forKey: "orientationRange")
+        cacell.setValue(Double.pi, forKey: "orientationLongitude")
+        cacell.setValue(Double.pi, forKey: "orientationLatitude")
+        
         return cacell
     }
     
@@ -101,9 +107,22 @@ final class PlumeUIView: UIView {
         let animation = CABasicAnimation(keyPath: "birthRate")
         animation.fromValue = plume.emitter.birthRate
         animation.toValue = 0
-        animation.duration = 0.5
+        animation.duration = 1
         animation.fillMode = .forwards
         animation.isRemovedOnCompletion = false
+        return animation
+    }
+    
+    private func animate() -> CAKeyframeAnimation? {
+        let animation = CAKeyframeAnimation()
+        animation.keyPath = "birthRate"
+        animation.values = [15, 0]
+        animation.keyTimes = [0, 1]
+        animation.duration = 0.25
+        animation.fillMode = .forwards
+        animation.calculationMode = .cubicPaced
+        animation.isRemovedOnCompletion = false
+
         return animation
     }
 }
